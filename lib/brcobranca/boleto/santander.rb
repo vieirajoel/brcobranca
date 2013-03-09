@@ -79,14 +79,15 @@ module Brcobranca
       # Segunda parte do código de barras.
       # 9(01) | Fixo 9 <br/>
       # 9(07) | Convenio <br/>
-      # 9(05) | Fixo 00000<br/>
+      # 9(04) | Fixo 0000<br/>
       # 9(08) | Nosso Numero<br/>
+      # 9(01) | Nosso Numero DV<br/>
       # 9(01) | IOF<br/>
       # 9(03) | Carteira de cobrança<br/>
       #
       # @return [String] 25 caracteres numéricos.
       def codigo_barras_segunda_parte
-        "9#{self.convenio}0000#{self.numero_documento}90#{self.carteira}"
+        "9#{self.convenio}0000#{self.numero_documento}#{self.nosso_numero_dv}0#{self.carteira}"
       end
 
     end

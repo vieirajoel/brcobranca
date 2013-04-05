@@ -107,6 +107,12 @@ module Brcobranca
         File.join(File.dirname(__FILE__),'..','arquivos','logos',"bersi.jpg")
       end
 
+      #Array para composicao da arrecadacao
+      def composicao
+        self.composicao = Array.new
+      end
+
+
       # Dígito verificador do banco
       # @return [Integer] 1 caracteres numéricos.
       def banco_dv

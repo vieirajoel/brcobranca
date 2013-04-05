@@ -99,6 +99,12 @@ module Brcobranca
         File.join(File.dirname(__FILE__),'..','arquivos','logos',"#{class_name}.jpg")
       end
 
+      #Logotipo da empresa
+      # @return [Path] Caminho para o arquivo de logotipo da empresa.
+      def logoempresa
+        File.join(File.dirname(__FILE__),'..','arquivos','logos',"bersi.jpg")
+      end
+
       # Dígito verificador do banco
       # @return [Integer] 1 caracteres numéricos.
       def banco_dv

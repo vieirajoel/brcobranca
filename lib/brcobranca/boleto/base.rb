@@ -109,7 +109,7 @@ module Brcobranca
 
       #Array para composicao da arrecadacao
       def composicao=(*itens)
-        @composicao = itens
+        @composicao.push(itens)
       end
 
 

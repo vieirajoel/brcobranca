@@ -108,8 +108,8 @@ module Brcobranca
       end
 
       #Array para composicao da arrecadacao
-      def composicao(*itens)
-        self.composicao = itens
+      def composicao=(*itens)
+        @composicao = itens
       end
 
 

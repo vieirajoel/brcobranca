@@ -134,6 +134,12 @@ module Brcobranca
           #INICIO Primeira parte do BOLETO
           #LOGOTIPO da EMPRESA
           doc.image(boleto.logoempresa, :x => '0.5 cm', :y => '27 cm', :zoom => 80)
+          #Composição da arrecadação
+          doc.moveto :x => '10 cm' , :y => '27 cm'
+          boleto.composicao.each { |a| doc.show a, " " }
+          #boleto.composicao.each do |lanc| 
+          #  doc.show lanc
+          #end
           # LOGOTIPO do BANCO
           doc.image(boleto.logotipo, :x => '0.5 cm', :y => '23.85 cm', :zoom => 80)
           # Dados

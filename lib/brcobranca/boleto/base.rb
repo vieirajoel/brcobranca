@@ -111,6 +111,12 @@ module Brcobranca
       def composicao
       end
 
+      def composicao_print
+        composicao.each do |lanc| 
+          lanc
+        end
+      end
+
 
       # Dígito verificador do banco
       # @return [Integer] 1 caracteres numéricos.

@@ -138,7 +138,7 @@ module Brcobranca
           doc.moveto :x => '10 cm' , :y => '27 cm'
           doc.show boleto.composicao
           doc.moveto :x => '20 cm' , :y => '27 cm'
-          doc.show boleto.jj
+          #doc.show boleto.jj
           #boleto.composicao.each { |a| doc.show a, " " }
           #boleto.composicao.each do |lanc| 
           #  doc.show lanc

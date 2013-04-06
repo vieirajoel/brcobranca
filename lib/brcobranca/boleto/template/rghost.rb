@@ -136,10 +136,8 @@ module Brcobranca
           doc.image(boleto.logoempresa, :x => '0.5 cm', :y => '27 cm', :zoom => 80)
           #Composição da arrecadação
           doc.moveto :x => '10 cm' , :y => '27 cm'
-          boleto.composicao.each do |lanc| 
-            doc.show lanc
-          end
-          doc.moveto :x => '20 cm' , :y => '27 cm'
+          boleto.composicao.each { |a| doc.show a, " " }
+          #doc.moveto :x => '20 cm' , :y => '27 cm'
           #doc.show boleto.jj
           #boleto.composicao.each { |a| doc.show a, " " }
           #boleto.composicao.each do |lanc| 

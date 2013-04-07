@@ -111,6 +111,7 @@ module Brcobranca
       def composicao=(valor)
         @composicao = Array.new
         @composicao.push(valor)
+        @composicao.compact!
       end
 
       def composicao_print

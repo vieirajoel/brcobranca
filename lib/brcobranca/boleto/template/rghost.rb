@@ -135,7 +135,7 @@ module Brcobranca
           #LOGOTIPO da EMPRESA
           doc.image(boleto.logoempresa, :x => '0.5 cm', :y => '27 cm', :zoom => 80)
           #Composição da arrecadação
-          doc.moveto :x => '10 cm' , :y => '27 cm'
+          doc.moveto :x => '2 cm' , :y => '27 cm'
           doc.show "#{boleto.composicao_print}"
           #doc.moveto :x => '20 cm' , :y => '27 cm'
           #doc.show boleto.jj

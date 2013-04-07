@@ -135,10 +135,20 @@ module Brcobranca
           #LOGOTIPO da EMPRESA
           doc.image(boleto.logoempresa, :x => '0.5 cm', :y => '27 cm', :zoom => 80)
           #Composição da arrecadação
+
           doc.moveto :x => '3.5 cm' , :y => '27 cm'
-          boleto.composicao.each do |lanc|
-            doc.show lanc
-          end
+
+          grid=Grid::Matrix.new
+          grid.column :title => "Arrecadação", :width => 1
+          grid.column :title => "Referência", :width => 3
+          grid.column :title => "Valor", :width => 3, :align => :right
+          grid.data(boleto.composicao)
+          doc.set grid
+
+
+          #boleto.composicao.each do |lanc|
+          #  doc.show lanc
+          #end
           #doc.show "#{boleto.composicao_print}"
           #doc.moveto :x => '20 cm' , :y => '27 cm'
           #doc.show boleto.jj

@@ -108,9 +108,7 @@ module Brcobranca
       end
 
       #Array para composicao da arrecadacao
-      def composicao=(valor)
-        @composicao = Array.new
-        @composicao.push(valor)
+      def composicao
       end
 
       def composicao_print

@@ -138,7 +138,7 @@ module Brcobranca
 
           doc.moveto :x => '3.5 cm' , :y => '27 cm'
 
-          grid=Grid::Matrix.new
+          grid=Matrix.new
           grid.column :title => "Arrecadação", :width => 1
           grid.column :title => "Referência", :width => 3
           grid.column :title => "Valor", :width => 3, :align => :right

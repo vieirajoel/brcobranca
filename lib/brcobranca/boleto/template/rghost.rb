@@ -140,7 +140,7 @@ module Brcobranca
           yy = 27
           boleto.composicao.each do |lanc|
             doc.show lanc
-            doc.moveto :x => '3.5 cm', :y => yy.to_s + 'cm'
+            doc.moveto :x => '3.5 cm', :y => yy.to_s + ' cm'
             yy = yy + 0.5
           end
 

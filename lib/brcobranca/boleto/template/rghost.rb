@@ -137,18 +137,13 @@ module Brcobranca
           #Composição da arrecadação
 
           doc.moveto :x => '3.5 cm' , :y => '27 cm'
+          yy = 27
+          boleto.composicao.each do |lanc|
+            doc.show lanc
+            doc.moveto :x => '3.5 cm', :y => yy + 'cm'
+            yy = yy + 0.5
+          end
 
-          grid=RGhost::Grid::Matrix.new
-          grid.column :title => "Arrecadação", :width => 1
-          grid.column :title => "Referência", :width => 3
-          grid.column :title => "Valor", :width => 3, :align => :right
-          grid.data(boleto.composicao)
-          doc.set grid
-
-
-          #boleto.composicao.each do |lanc|
-          #  doc.show lanc
-          #end
           #doc.show "#{boleto.composicao_print}"
           #doc.moveto :x => '20 cm' , :y => '27 cm'
           #doc.show boleto.jj

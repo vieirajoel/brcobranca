@@ -133,24 +133,25 @@ module Brcobranca
         def modelo_generico_cabecalho(doc, boleto)
           #INICIO Primeira parte do BOLETO
           #LOGOTIPO da EMPRESA
-          doc.image(boleto.logoempresa, :x => '0.5 cm', :y => '27 cm', :zoom => 80)
+          doc.image(boleto.logoempresa, :x => '0.75 cm', :y => '26.5 cm', :zoom => 80)
           #Composição da arrecadação
 
-          doc.moveto :x => '3.5 cm' , :y => '27 cm'
-          yy = 27
-          boleto.composicao.each do |lanc|
+          #Seta yy em 28.95
+          yy = 28.95
+          doc.moveto :x => '3.5 cm', :y => yy.to_s + ' cm'
+          doc.show "#{boleto.sacado} - (#{boleto.cedente})"
+          yy-=0.45
+          doc.moveto :x => '3.5 cm', :y => yy.to_s + ' cm'
+          doc.show "COMPOSIÇÃO DA ARRECADAÇÃO - Compet.: #{boleto.mes_referencia} - Valor Total Original: R$ #{boleto.valor_original.to_currency}", :with => :bold
+          yy-=0.2
+          boleto.composicao.each { |lanc|
+            yy-=0.3
+            doc.moveto :x => '3.75 cm', :y => yy.to_s + ' cm'
             doc.show lanc
-            doc.moveto :x => '3.5 cm', :y => yy.to_s + ' cm'
-            yy = yy + 0.5
-          end
+          }
+          doc.moveto :x => '0.5 cm', :y => 25.5
+          doc.show "BOLETO GERADO PELO SISTEMA BOLETO EXPRESSO (www.bersi.com.br) / Contato: (15) 3229-5555 ou atendimento@bersi.com.br"
 
-          #doc.show "#{boleto.composicao_print}"
-          #doc.moveto :x => '20 cm' , :y => '27 cm'
-          #doc.show boleto.jj
-          #boleto.composicao.each { |a| doc.show a, " " }
-          #boleto.composicao.each do |lanc| 
-          #  doc.show lanc
-          #end
           # LOGOTIPO do BANCO
           doc.image(boleto.logotipo, :x => '0.5 cm', :y => '23.85 cm', :zoom => 80)
           # Dados

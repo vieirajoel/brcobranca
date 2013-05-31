@@ -73,6 +73,8 @@ module Brcobranca
       attr_accessor :sacado_documento
       # <b>REQUERIDO</b>: Lancamentos para composição
       attr_accessor :composicao
+      attr_accessor :mes_referencia
+      attr_accessor :valor_original
 
       # Validações
       validates_presence_of :agencia, :conta_corrente, :moeda, :especie_documento, :especie, :aceite, :numero_documento, :message => "não pode estar em branco."

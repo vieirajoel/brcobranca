@@ -79,7 +79,7 @@ module Brcobranca
           modelo_generico_rodape(doc, boleto)
 
           #Gerando codigo de barra com rghost_barcode
-          doc.barcode_interleaved2of5(boleto.codigo_barras, :width => '10.3 cm', :height => '1.3 cm', :x => '0.7 cm', :y => '5.8 cm' ) if boleto.codigo_barras
+          doc.barcode_interleaved2of5(boleto.codigo_barras, :width => '10.3 cm', :height => '1.3 cm', :x => '0.7 cm', :y => '4.4 cm' ) if boleto.codigo_barras
 
           # Gerando stream
           formato = (options.delete(:formato) || Brcobranca.configuration.formato)
@@ -132,54 +132,72 @@ module Brcobranca
         # Monta o cabeçalho do layout do boleto
         def modelo_generico_cabecalho(doc, boleto)
           #INICIO Primeira parte do BOLETO
+          doc.moveto :x => '0.5 cm', :y => '29 cm'
+          doc.show "BOLETO ORIGINAL - Detalhamento (Vencimento #{boleto.venc_original.to_s_br} e Nosso Número #{boleto.numero_documento})", :with => :bold
+          doc.moveto :x => '3.5 cm', :y => '28.6 cm'
+          doc.show "#{boleto.sacado} - (#{boleto.cedente})"
+
+          doc.moveto :x => '3.5 cm', :y => '28.1 cm'
+          if boleto.acordo.nil?
+            doc.show "COMPOSIÇÃO DA ARRECADAÇÃO - Compet.: #{boleto.mes_referencia} - Valor Total Original: R$ #{boleto.valor_original.to_currency}", :with => :bold
+          else
+            doc.show "COMPOSIÇÃO DA ARRECADAÇÃO - Compet.: #{boleto.mes_referencia} - Acordo: #{boleto.acordo} Valor Total Original: R$ #{boleto.valor_original.to_currency}", :with => :bold
+          end
+
           #LOGOTIPO da EMPRESA
-          doc.image(boleto.logoempresa, :x => '0.75 cm', :y => '26.5 cm', :zoom => 80)
+          doc.image(boleto.logoempresa, :x => '0.7 cm', :y => '26.1 cm', :zoom => 80)  
           #Composição da arrecadação
 
-          #Seta yy em 28.95
-          yy = 28.95
-          doc.moveto :x => '3.5 cm', :y => yy.to_s + ' cm'
-          doc.show "#{boleto.sacado} - (#{boleto.cedente})"
-          yy-=0.45
-          doc.moveto :x => '3.5 cm', :y => yy.to_s + ' cm'
-          doc.show "COMPOSIÇÃO DA ARRECADAÇÃO - Compet.: #{boleto.mes_referencia} - Valor Total Original: R$ #{boleto.valor_original.to_currency}", :with => :bold
-          yy-=0.2
-          boleto.composicao.each { |lanc|
-            yy-=0.3
-            doc.moveto :x => '3.75 cm', :y => yy.to_s + ' cm'
+          yy = 27.7
+          boleto.composicao.each do |lanc|
+            doc.moveto :x => '3.7 cm', :y => yy.to_s + ' cm'
             doc.show lanc
-          }
-          doc.moveto :x => '0.5 cm', :y => 25.5
-          doc.show "BOLETO GERADO PELO SISTEMA BOLETO EXPRESSO (www.bersi.com.br) / Contato: (15) 3229-5555 ou atendimento@bersi.com.br"
+            yy = yy - 0.3
+          end
+
+          #Unidades vinculadas
+          doc.moveto :x => '16.7 cm', :y => '27.7 cm'
+          doc.show "Unidades vinculadas:", :with => :bold
+          doc.text_area "#{boleto.unidades_vinculadas}", :width => '4 cm', :x => '16.7 cm', :y => '27.4 cm'
 
           # LOGOTIPO do BANCO
-          doc.image(boleto.logotipo, :x => '0.5 cm', :y => '23.85 cm', :zoom => 80)
+          doc.moveto :x => '0.5 cm' , :y => '24.9 cm'
+          doc.show "BOLETO EXPRESSO (2 VIA de BOLETO gerado pelo site www.bersi.com.br).", :with => :bold
+          doc.moveto :x => '0.5 cm' , :y => '24.5 cm'
+          doc.show "Caso a geração da 2 via seja feita após o vencimento original, o novo boleto será corrigido com os acréscimos legais."
+          doc.moveto :x => '0.5 cm' , :y => '24.1 cm'
+          doc.show "Em caso de dúvidas ou esclarecimentos adicionais contatar a BERSI ADMINISTRADORA."
+          doc.image(boleto.logotipo, :x => '0.5 cm', :y => '22.6 cm', :zoom => 80)
           # Dados
-          doc.moveto :x => '5.2 cm' , :y => '23.85 cm'
+          doc.moveto :x => '5.2 cm' , :y => '22.6 cm'
           doc.show "#{boleto.banco}-#{boleto.banco_dv}", :tag => :grande
-          doc.moveto :x => '7.5 cm' , :y => '23.85 cm'
+          doc.moveto :x => '7.5 cm' , :y => '22.6 cm'
           doc.show boleto.codigo_barras.linha_digitavel, :tag => :grande
-          doc.moveto :x => '0.7 cm' , :y => '23 cm'
+
+          doc.moveto :x => '0.7 cm' , :y => '21.85 cm'
           doc.show boleto.cedente
-          doc.moveto :x => '11 cm' , :y => '23 cm'
+          doc.moveto :x => '11 cm' , :y => '21.85 cm'
           doc.show boleto.agencia_conta_boleto
-          doc.moveto :x => '14.2 cm' , :y => '23 cm'
+          doc.moveto :x => '14.2 cm' , :y => '21.85 cm'
           doc.show boleto.especie
-          doc.moveto :x => '15.7 cm' , :y => '23 cm'
+          doc.moveto :x => '15.7 cm' , :y => '21.85 cm'
           doc.show boleto.quantidade
-          doc.moveto :x => '0.7 cm' , :y => '22.2 cm'
-          doc.show boleto.numero_documento
-          doc.moveto :x => '7 cm' , :y => '22.2 cm'
-          doc.show "#{boleto.documento_cedente.formata_documento}"
-          doc.moveto :x => '12 cm' , :y => '22.2 cm'
-          doc.show boleto.data_vencimento.to_s_br
-          doc.moveto :x => '16.5 cm' , :y => '23 cm'
+          doc.moveto :x => '16.5 cm' , :y => '21.85 cm'
           doc.show boleto.nosso_numero_boleto
-          doc.moveto :x => '16.5 cm' , :y => '22.2 cm'
+
+          doc.moveto :x => '0.7 cm' , :y => '21.0 cm'
+          doc.show boleto.numero_documento
+          doc.moveto :x => '7 cm' , :y => '21.0 cm'
+          doc.show "#{boleto.documento_cedente.formata_documento}"
+          doc.moveto :x => '12 cm' , :y => '21.0 cm'
+          doc.show boleto.data_vencimento.to_s_br
+          doc.moveto :x => '16.5 cm' , :y => '21.0 cm'
           doc.show boleto.valor_documento.to_currency
-          doc.moveto :x => '1.4 cm' , :y => '20.9 cm'
+
+          doc.moveto :x => '1.4 cm' , :y => '19.75 cm'
           doc.show "#{boleto.sacado}"
-          doc.moveto :x => '1.4 cm' , :y => '20.6 cm'
+
+          doc.moveto :x => '1.4 cm' , :y => '19.35 cm'
           doc.show "#{boleto.sacado_endereco}"
           #FIM Primeira parte do BOLETO
         end
@@ -188,56 +206,62 @@ module Brcobranca
         def modelo_generico_rodape(doc, boleto)
           #INICIO Segunda parte do BOLETO BB
           # LOGOTIPO do BANCO
-          doc.image(boleto.logotipo, :x => '0.5 cm', :y => '16.8 cm', :zoom => 80)
-          doc.moveto :x => '5.2 cm' , :y => '16.8 cm'
+          doc.image(boleto.logotipo, :x => '0.5 cm', :y => '15.6 cm', :zoom => 80)
+          doc.moveto :x => '5.2 cm' , :y => '15.6 cm'
           doc.show "#{boleto.banco}-#{boleto.banco_dv}", :tag => :grande
-          doc.moveto :x => '7.5 cm' , :y => '16.8 cm'
+          doc.moveto :x => '7.5 cm' , :y => '15.6 cm'
           doc.show boleto.codigo_barras.linha_digitavel, :tag => :grande
-          doc.moveto :x => '0.7 cm' , :y => '16 cm'
+
+          doc.moveto :x => '0.7 cm' , :y => '14.8 cm'
           doc.show boleto.local_pagamento
-          doc.moveto :x => '16.5 cm' , :y => '16 cm'
+          doc.moveto :x => '16.5 cm' , :y => '14.8 cm'
           doc.show boleto.data_vencimento.to_s_br if boleto.data_vencimento
-          doc.moveto :x => '0.7 cm' , :y => '15.2 cm'
+
+          doc.moveto :x => '0.7 cm' , :y => '14 cm'
           doc.show boleto.cedente
-          doc.moveto :x => '16.5 cm' , :y => '15.2 cm'
+          doc.moveto :x => '16.5 cm' , :y => '14 cm'
           doc.show boleto.agencia_conta_boleto
-          doc.moveto :x => '0.7 cm' , :y => '14.4 cm'
+
+          doc.moveto :x => '0.7 cm' , :y => '13.10 cm'
           doc.show boleto.data_documento.to_s_br if boleto.data_documento
-          doc.moveto :x => '4.2 cm' , :y => '14.4 cm'
+          doc.moveto :x => '4.2 cm' , :y => '13.10 cm'
           doc.show boleto.numero_documento
-          doc.moveto :x => '10 cm' , :y => '14.4 cm'
+          doc.moveto :x => '10 cm' , :y => '13.10 cm'
           doc.show boleto.especie_documento
-          doc.moveto :x => '11.7 cm' , :y => '14.4 cm'
+          doc.moveto :x => '11.7 cm' , :y => '13.10 cm'
           doc.show boleto.aceite
-          doc.moveto :x => '13 cm' , :y => '14.4 cm'
+          doc.moveto :x => '13 cm' , :y => '13.10 cm'
           doc.show boleto.data_processamento.to_s_br if boleto.data_processamento
-          doc.moveto :x => '16.5 cm' , :y => '14.4 cm'
+          doc.moveto :x => '16.5 cm' , :y => '13.10 cm'
           doc.show boleto.nosso_numero_boleto
-          doc.moveto :x => '4.4 cm' , :y => '13.5 cm'
+
+          doc.moveto :x => '4.4 cm' , :y => '12.30 cm'
           doc.show boleto.carteira
-          doc.moveto :x => '6.4 cm' , :y => '13.5 cm'
+          doc.moveto :x => '6.4 cm' , :y => '12.30 cm'
           doc.show boleto.especie
-          doc.moveto :x => '8 cm' , :y => '13.5 cm'
+          doc.moveto :x => '8 cm' , :y => '12.30 cm'
           doc.show boleto.quantidade
-          doc.moveto :x => '11 cm' , :y => '13.5 cm'
+          doc.moveto :x => '11 cm' , :y => '12.30 cm'
           doc.show boleto.valor.to_currency
-          doc.moveto :x => '16.5 cm' , :y => '13.5 cm'
+          doc.moveto :x => '16.5 cm' , :y => '12.30 cm'
           doc.show boleto.valor_documento.to_currency
-          doc.moveto :x => '0.7 cm' , :y => '12.7 cm'
+
+          doc.moveto :x => '0.7 cm' , :y => '11.4 cm'
           doc.show boleto.instrucao1
-          doc.moveto :x => '0.7 cm' , :y => '12.3 cm'
+          doc.moveto :x => '0.7 cm' , :y => '11.0 cm'
           doc.show boleto.instrucao2
-          doc.moveto :x => '0.7 cm' , :y => '11.9 cm'
+          doc.moveto :x => '0.7 cm' , :y => '10.6 cm'
           doc.show boleto.instrucao3
-          doc.moveto :x => '0.7 cm' , :y => '11.5 cm'
+          doc.moveto :x => '0.7 cm' , :y => '10.2 cm'
           doc.show boleto.instrucao4
-          doc.moveto :x => '0.7 cm' , :y => '11.1 cm'
+          doc.moveto :x => '0.7 cm' , :y => '9.8 cm'
           doc.show boleto.instrucao5
-          doc.moveto :x => '0.7 cm' , :y => '10.7 cm'
+          doc.moveto :x => '0.7 cm' , :y => '9.4 cm'
           doc.show boleto.instrucao6
-          doc.moveto :x => '1.2 cm' , :y => '8.8 cm'
+
+          doc.moveto :x => '1.2 cm' , :y => '7.6 cm'
           doc.show "#{boleto.sacado}" if boleto.sacado
-          doc.moveto :x => '1.2 cm' , :y => '8.4 cm'
+          doc.moveto :x => '1.2 cm' , :y => '7.2 cm'
           doc.show "#{boleto.sacado_endereco}"
           #FIM Segunda parte do BOLETO
         end
